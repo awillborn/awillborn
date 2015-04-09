@@ -55,10 +55,12 @@ hr {
 
 .container {
   width: 50%;
-  margin: 100px 0 100px 23%; }
-  .container p, .container ul {
-    font-size: 0.9375rem;
-    font-weight: 300; }
+  margin: 100px 0 100px 23%; 
+}
+
+.container p, .container ul {
+  font-size: 0.9375rem;
+  font-weight: 300; }
 
 .content ul {
   margin-top: 15.625px; }
@@ -87,7 +89,16 @@ hr {
   float: right;
 }
 
-.content .github-link {
+#conjugator-content, #transliterator-content, #testing-content, #betterbet-content, #sat-content {
+  display: none;
+}
+
+.content .project-desc {
+  margin: 1em 2em;
+}
+
+
+.content .github-link, .content .down-arrow-link {
   border-bottom: none;
 }
 

@@ -3,6 +3,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" href="http://faviconist.com/icons/c0953144e1878c290c094ec2745ca629/favicon.ico" />
   <link rel="stylesheet" href="css/styles.css">
   <title>Anne Love Willborn</title>
 </head>
@@ -18,11 +19,68 @@
   <section role="main">
     <div class="container content">
       <h2>Projects</h2>
-      <p><a target="_blank" href="http://arabic-conjugator.herokuapp.com">Arabic Verb Conjugator</a><span><a class="github-link" href="https://github.com/awillborn/Arabic-Conjugator"><img src="mark-github-128.png" height="20" width="20"></img></a></p>
-      <p><a target="_blank" href="https://chrome.google.com/webstore/detail/arabictransliterator/gkdoafgmajedgojalmogmeelbgeffdpm">Arabic Transliterator</a><span><a class="github-link" href="https://github.com/awillborn/ArabicTransliterator"><img src="mark-github-128.png" height="20" width="20"></img></a></p>
-      <p><a target="_blank" href="http://multi-armed-bandit-test.herokuapp.com/">Machine Learning AB Testing Demo</a><span><a class="github-link" href="https://github.com/awillborn/multi-armed_bandit_algorithm"><img src="mark-github-128.png" height="20" width="20"></img></a></p>
-      <p><a target="_blank" href="http://betterbet.herokuapp.com/">Better Bet</a><span><a class="github-link" href="https://github.com/banana-slugs-2014/BetterBet"><img src="mark-github-128.png" height="20" width="20"></img></a></p>
-      <p><a target="_blank" href="https://apps.getpebble.com/applications/534af458160bccb128000013">Sat(ellite) Alert</a><span><a class="github-link" href="https://github.com/hwhelchel/sat_alert"><img src="mark-github-128.png" height="20" width="20"></img></a></p>
+      <p id="conjugator">
+        <a href="#" class="down-arrow-link"><img src="arrow-down.png" height="10" width="20"></img></a>
+        <a target="_blank" href="http://arabic-conjugator.herokuapp.com">Arabic Verb Conjugator
+        </a>
+        <span>
+          <a class="github-link" href="https://github.com/awillborn/Arabic-Conjugator">
+            <img src="mark-github-128.png" height="20" width="20"></img>
+          </a>
+      </p>
+      <p id="conjugator-content" class="project-desc">
+        A Ruby gem that conjugates Arabic verbs given an input of the root letters, verb form, pronoun, and verb tense.
+      </p>
+      <p id="transliterator">
+        <a href="#" class="down-arrow-link"><img src="arrow-down.png" height="10" width="20"></img></a>
+        <a target="_blank" href="https://chrome.google.com/webstore/detail/arabictransliterator/gkdoafgmajedgojalmogmeelbgeffdpm">Arabic Transliterator
+        </a>
+        <span>
+          <a class="github-link" href="https://github.com/awillborn/ArabicTransliterator"><img src="mark-github-128.png" height="20" width="20">
+          </img>
+          </a>
+      </p>
+      <p id="transliterator-content" class="project-desc">
+        A Google Chrome extension that searches Google Scholar with multiple English transliterations of an Arabic word given just one English transliteration.
+      </p>
+      <p id="testing">
+        <a href="#" class="down-arrow-link"><img src="arrow-down.png" height="10" width="20"></img></a>
+        <a target="_blank" href="http://multi-armed-bandit-test.herokuapp.com/">Machine Learning AB Testing Demo
+        </a>
+        <span>
+          <a class="github-link" href="https://github.com/awillborn/multi-armed_bandit_algorithm">
+            <img src="mark-github-128.png" height="20" width="20"></img>
+          </a>
+      </p>
+      <p id="testing-content" class="project-desc">
+        A Sinatra app that demonstrates how to do simple AB testing using a multi-armed bandit machine learning strategy using Redis to store data.
+      </p>
+      <p id="betterbet">
+        <a href="#" class="down-arrow-link"><img src="arrow-down.png" height="10" width="20"></img></a>
+        <a target="_blank" href="http://betterbet.herokuapp.com/">Better Bet
+        </a>
+        <span>
+          <a class="github-link" href="https://github.com/banana-slugs-2014/BetterBet">
+            <img src="mark-github-128.png" height="20" width="20"></img>
+          </a>
+      </p>
+      <p id="betterbet-content" class="project-desc">
+        A Rails app that allows users to make bets with their friends that they will achieve goals by certain dates. If they do not achieve their goals, money is automatically transferred via Stripe from their credit card to a friend's bank account.
+      </p>
+      <p id="sat">
+        <a href="#" class="down-arrow-link"><img src="arrow-down.png" height="10" width="20"></img></a>
+        <a target="_blank" href="https://apps.getpebble.com/applications/534af458160bccb128000013">Sat(ellite) Alert
+        </a>
+        <span>
+          <a class="github-link" href="https://github.com/hwhelchel/sat_alert">
+            <img src="mark-github-128.png" height="20" width="20">
+          </img>
+        </a>
+      </p>
+      <p id="sat-content" class="project-desc">
+        A Pebble app that alerts the wearer when the International Space Station is overhead. Won first place at the 2014 NASA Hackathon in San Francisco.
+      </p>
+
     </div>
 
     <div class="container content">
@@ -60,6 +118,7 @@
   <footer role="contentinfo" class="container">
     <p>Inspired by <a target="_blank" href="http://michieldegraaf.com/">Michiel de Graaf</a>.</p>
   </footer>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script src="javascripts/scripts.js"></script>
 </body>
 </html>
