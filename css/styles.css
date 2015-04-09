@@ -62,6 +62,10 @@ hr {
   font-size: 0.9375rem;
   font-weight: 300; }
 
+.container p.visible-phone {
+  display: none;
+}
+
 .content ul {
   margin-top: 15.625px; }
 .content ul li:before {
@@ -317,4 +321,19 @@ footer.container p {
     padding: 0 25px; }
 
   header[role="banner"] .container {
-    margin: 125px auto; } }
+    margin: 125px auto;
+  }
+
+  .container p {
+    font-size: .8rem;
+  }
+
+  .container p.hidden-phone {
+    display: none;
+  }
+  .container p.visible-phone {
+    display: block;
+    line-height: 1.1rem;
+    margin-bottom: .7rem;
+  }
+}
