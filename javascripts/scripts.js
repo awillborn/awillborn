@@ -1,7 +1,11 @@
 $(function(){
   $('.down-arrow-link').on('click', function(e){
     e.preventDefault();
-    project = e.target.parentElement.parentElement.id
+    if($(e.target).hasClass('down-arrow-link')){
+      project = e.target.parentElement.id
+    } else {
+      project = e.target.parentElement.parentElement.id
+    }
     $("#" + project + "-content").slideToggle("fast");
   })
 })
