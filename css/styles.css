@@ -320,6 +320,10 @@ footer.container p {
     margin: 62.5px auto;
     padding: 0 25px; }
 
+  .container h1 span {
+    line-height: 2rem;
+  }
+
   header[role="banner"] .container {
     margin: 125px auto;
   }
