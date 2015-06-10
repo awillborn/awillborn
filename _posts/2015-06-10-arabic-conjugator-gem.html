@@ -1,0 +1,208 @@
+{% include post_header.html %}
+<body>
+  <div class="post">
+    <h2 class="post-title">Arabic Conjugator Gem Explained to Non-Arabic Speakers</h2>
+    <div class="post-content">
+        <p>
+          My first major Ruby project was a <a href='https://github.com/awillborn/Arabic-Conjugator'>gem</a> that conjugates Arabic verbs. It started out as a long series of if-else statements, but as I learned about Object Oriented design, I developed a way to model Arabic verb conjugation using class inheritance. I wanted to write this post to explain the design problem I tackled in a way that non-Arabic speakers could understand.
+        </p>
+        <p>
+          First, here’s what you do need to know about Arabic:
+        </p>
+        <p>
+          Arabic is a root-based language. This means that all nouns, verbs, and adjectives are built off of a root that consists of three letters. For example, k-t-b is an Arabic root, and the following words are built from it:
+
+          <ul>
+            <li>kitaab: book</li>
+            <li>maktab: office</li>
+            <li>kataba: he wrote</li>
+          </ul>
+
+          Notice that all three of these words have the letters k-t-b in that order.
+        </p>
+        <p>
+          Arabic has thirteen verb forms, nine of which are commonly used in Modern Standard Arabic. The forms dictate the vowels and consonants that surround the root letters. For example, the singular masculine past tense for the root k-t-b in its different forms are:
+          <ul>
+            <li>Form I: kataba</li>
+            <li>Form II: kattaba</li>
+            <li>Form III: kaataba</li>
+            <li>Form IV: aktaba</li>
+            <li>Form V: takataba</li>
+            <li>Form VI: takaataba</li>
+            <li>Form VII: intakaba</li>
+            <li>Form VIII: iktataba</li>
+            <li>Form X: istaktaba</li>
+          </ul>
+
+          Not all roots have verbs in all forms (some of the above are not actually words), but when they do, the verbs have different meanings.
+        </p>
+
+        <p>
+          So, to conjugate an Arabic verb, you must know its three root letters, its verb form, the pronoun, and the tense.
+        </p>
+
+        <p>
+          I start by initializing a Verb object with three root letters, a tense, a form, and a pronoun. Then I find that verb's ‘types’. Certain Arabic verb forms behave differently when particular letters, such as vowels, are in the root. A verb is said to be ‘hollow’ if the second radical is a vowel, and it is ‘defective’ if the third root letter is a vowel. Form VIII behaves strangely when the first root letter is one of several letters — it is said to have an ‘assimilated taa’ or a ‘morphed taa’. You’ll see I am checking for all of these various types in the Type Factory after initializing the verb:
+
+          <pre class="code-sample">
+            def load_types
+              types = []
+              types << "assimilated defective" if assimilated_defective?
+              types << "hollow defective"      if hollow_defective?
+              types << "defective"             if defective?
+              types << "hollow"                if hollow?
+              types << "doubled"               if doubled?
+              types << "assimilated"           if assimilated?
+              types << "assimilated_taa"       if assimilated_taa?
+              types << "morphed_taa"           if morphed_taa?
+              types << "regular"               if types.empty?
+              types
+            end
+
+            def assimilated_defective?
+              (@root1 == "و" || @root1 == "ي") && (@root3 == "و" || @root3 == "ي")
+            end
+
+            def hollow_defective?
+              (@root2 == "و" || @root2 == "ي") && (@root3 == "و" || @root3 == "ي")
+            end
+
+            def hollow?
+              @root2 == "و" || @root2 == "ي"
+            end
+
+            def defective?
+              @root3 == "و" || @root3 == "ي"
+            end
+
+            def doubled?
+              @root2 == @root3
+            end
+
+            def assimilated?
+              @root1 == "و" || @root1 == "ي"
+            end
+
+            def assimilated_taa?
+              @form == "8" && ["ت", "ث", "د", "ط", "ظ"].include?(@root1)
+            end
+
+            def morphed_taa?
+              @form == "8" && ["ذ", "ز", "ص", "ض"].include?(@root1)
+            end
+          </pre>
+        </p>
+
+        <p>
+          After figuring out all of a verb’s types, I find what I am calling the ‘base'. This is the meat of the verb conjugation process, and I will go into detail about this shortly.
+        </p>
+        <p>
+          After finding the base of the verb, the past tense is created by adding letters to the end of the base, and the present tense is created by adding letters to the beginning and end of the base:
+          <pre>
+            def conjugate
+              return @base + PAST_AFFIXES[@pronoun] if @tense == 'past'
+              PRESENT_AFFIXES[@pronoun][0] + @base + PRESENT_AFFIXES[@pronoun][1]
+            end
+          </pre>
+        </p>
+        <p>
+          Though there are many different verb tenses that can be expressed in Arabic, the only ones that affect the verb itself are past tense and present tense. The future tense, for example, is expressed by simply adding a modifier to the present tense verb.
+        </p>
+
+        <p>
+          Before getting to tenses, though, the conjugator must determine the base of the verb. The base is determined by the verb form, and it may need to be modified depending on the verb types.
+        </p>
+
+        <p>
+          Each verb form and tense combination has a separate class (FormIPresentBase, FormIPastBase, FormIIPresentBase, FormIIPastBase, etc.), each of which inherits from Base.
+        </p>
+
+        <p>
+          The Base class has some default methods for initializing a base and dealing with different verb types. Let’s take a look at FormVIIIPastBase.rb and Base.rb to see how these classes interact. In the FormVIIIPastBase initialize method, I first call ‘super’ because all bases need to assign instance variables for their root letters and pronoun, as well as make adjustments if their root includes the Arabic letter hamza.
+
+          <pre>
+            class Base
+              def initialize(verb)
+                @root1 = verb.root1
+                @root2 = verb.root2
+                @root3 = verb.root3
+                @pronoun = verb.pronoun
+                adjust_first_radical  if @root1 == "ء"
+                adjust_second_radical if @root2 == "ء"
+                adjust_third_radical  if @root3 == "ء"
+              end
+
+            class FormVIIIPastBase &lt; Base
+              def initialize(verb)
+                super
+                @base =  "ا" + @root1 + "ت" + @root2 + @root3
+              end
+          </pre>
+
+          After calling the necessary methods from the parent initialize method, I assign @base to the specific formulation for the FormVIIIPastBase.
+        </p>
+
+        <p>
+          The Base Factory calls methods named after verb types, which exist on all of the base classes:
+
+          <pre>
+            def load_base
+              form = FORM_MAPPING[@form_name.concat(@tense)].new(@verb)
+              case @types
+              when "assimilated defective"
+                form.assimilated_defective_base
+              when "hollow defective"
+                form.hollow_defective_base
+              when "assimilated"
+                form.assimilated_base
+              when "defective"
+                form.defective_base
+              when "hollow"
+                form.hollow_base
+              when "doubled"
+                form.doubled_base
+              when "regular"
+                form.regular_base
+              when "assimilated_taa"
+                form.assimilated_taa_base
+              when "morphed_taa"
+                form.morphed_taa_base
+              end
+            end
+          </pre>
+        </p>
+
+        <p>
+          Different verb forms deal with the many verb types in different ways. Let’s look at some examples. Many of the child base classes, such as FormIIPastBase, FormIIPresentBase, FormIIIPastBase, and FormVPresentBase do not have a method named hollow_base. When that method is called on these classes, the parent Base class’s hollow_base method will be called instead. All of these form-tense combinations treat hollow bases the same way, so I only need one method to deal with all of them. FormIVPastBase and FormIVPresentBase, however, deal with hollow verbs differently. They each have a hollow_base method that overrides the parent hollow_base method.
+
+          <pre>
+            class Base
+
+              ...
+
+              def hollow_base
+                return @base[0...-1] + "ؤ" if @root3 == "أ" && @pronoun == :they
+                @base
+              end
+
+
+            class FormIVPastBase &lt; Base
+              def initialize(verb)
+                super
+                @base = calculate_base
+              end
+
+              def hollow_base
+                return "أ" + @root1 + "ا" + @root3 if [:he, :she, :they].include?(@pronoun)
+                "أ" + @root1 + @root3
+              end
+          </pre>
+        </p>
+
+        <p>
+          My verb conjugator is still a work in progress, but you can see it in action <a href='arabic-conjugator.herokuapp.com'>here</a>.
+        </p>
+    </div>
+  </div>
+</body>
+{% include post_footer.html %}
